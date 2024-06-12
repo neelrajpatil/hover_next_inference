@@ -10,14 +10,14 @@ from skimage.segmentation import watershed
 from scipy.ndimage import find_objects
 from numcodecs import Blosc
 from skimage.measure import regionprops
-from src.constants import (
+from hover_next_inference.constants import (
     MIN_THRESHS_LIZARD,
     MIN_THRESHS_PANNUKE,
     MAX_THRESHS_LIZARD,
     MAX_THRESHS_PANNUKE,
     MAX_HOLE_SIZE,
 )
-from src.data_utils import center_crop, WholeSlideDataset, NpyDataset, ImageDataset
+from hover_next_inference.data_utils import center_crop, WholeSlideDataset, NpyDataset, ImageDataset
 
 
 def update_dicts(pinst_, pcls_, pcls_out, t_, old_ids, initial_ids):

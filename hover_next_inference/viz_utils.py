@@ -6,8 +6,8 @@ import openslide
 from multiprocessing import Pool
 from functools import partial
 from tqdm.auto import tqdm
-from src.post_process_utils import get_openslide_info
-from src.constants import (
+from hover_next_inference.post_process_utils import get_openslide_info
+from hover_next_inference.constants import (
     CLASS_LABELS_LIZARD,
     CLASS_LABELS_PANNUKE,
     COLORS_LIZARD,

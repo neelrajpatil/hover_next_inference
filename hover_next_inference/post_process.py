@@ -1,12 +1,12 @@
-from src.post_process_utils import (
+from hover_next_inference.post_process_utils import (
     work,
     write,
     get_pp_params,
     get_shapes,
     get_tile_coords,
 )
-from src.viz_utils import create_tsvs, create_polygon_output
-from src.data_utils import NpyDataset, ImageDataset
+from hover_next_inference.viz_utils import create_tsvs, create_polygon_output
+from hover_next_inference.data_utils import NpyDataset, ImageDataset
 from typing import List, Tuple
 import zarr
 from numcodecs import Blosc

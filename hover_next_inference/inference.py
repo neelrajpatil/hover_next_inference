@@ -13,11 +13,11 @@ from numcodecs import Blosc
 from torch.utils.data import DataLoader
 from tqdm.auto import tqdm
 from scipy.special import softmax
-from src.multi_head_unet import get_model, load_checkpoint
-from src.data_utils import WholeSlideDataset, NpyDataset, ImageDataset
-from src.augmentations import color_augmentations
-from src.spatial_augmenter import SpatialAugmenter
-from src.constants import TTA_AUG_PARAMS, VALID_WEIGHTS
+from hover_next_inference.multi_head_unet import get_model, load_checkpoint
+from hover_next_inference.data_utils import WholeSlideDataset, NpyDataset, ImageDataset
+from hover_next_inference.augmentations import color_augmentations
+from hover_next_inference.spatial_augmenter import SpatialAugmenter
+from hover_next_inference.constants import TTA_AUG_PARAMS, VALID_WEIGHTS
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 

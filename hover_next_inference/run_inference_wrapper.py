@@ -55,7 +55,7 @@ def get_input_type(params):
     return params
 
 
-def main(params: dict):
+def run_inference_wrapper(params: dict):
     """
     Start nuclei segmentation and classification pipeline using specified parameters from argparse
 
@@ -229,4 +229,4 @@ if __name__ == "__main__":
     )
     parser.add_argument("--cache", type=str, default=None, help="cache path")
     params = vars(parser.parse_args())
-    main(params)
+    run_inference_wrapper(params)
