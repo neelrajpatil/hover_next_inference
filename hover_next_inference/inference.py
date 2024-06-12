@@ -314,6 +314,7 @@ def download_weights(model_code, params_data_dirs):
             print("Timeout")
             return None
 
+        os.makedirs(params_data_dirs, exist_ok=True)
         params_data_dirs = os.path.join(params_data_dirs, "/")
 
         total_size = int(response.headers.get("content-length", 0))
