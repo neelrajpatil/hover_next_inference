@@ -274,7 +274,7 @@ def get_inference_setup(params):
     models = []
     for pth in params["data_dirs"]:
         if not os.path.exists(pth):
-            pth = download_weights(os.path.split(pth)[-1], params["data_dirs"][0])               
+            pth = download_weights(os.path.split(pth)[-1], os.getcwd())               
 
         checkpoint_path = f"{pth}/train/best_model"
         mod_params = toml.load(f"{pth}/params.toml")
@@ -304,22 +304,23 @@ def get_inference_setup(params):
 
     return params, models, augmenter, color_aug_fn
 
-def download_weights(model_code, params_data_dirs):
+def download_weights(model_code, download_location):
     if model_code in VALID_WEIGHTS:
         url = f"https://zenodo.org/records/10635618/files/{model_code}.zip"
-        print("downloading", model_code, "weights to", params_data_dirs)
+        print("downloading", model_code, "weights to", download_location)
         try:
             response = requests.get(url, stream=True, timeout=15.0)
         except requests.exceptions.Timeout:
             print("Timeout")
             return None
-
-        os.makedirs(params_data_dirs, exist_ok=True)
-        params_data_dirs = os.path.join(params_data_dirs, "/")
+        download_location = os.path.join(download_location, "/")
+        download_location = os.path.join(download_location, model_code)
+        os.makedirs(download_location, exist_ok=True)
+        download_location = os.path.join(download_location, "/")
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 Kibibyte
-        cache_path = os.path.join(params_data_dirs, "cache.zip")
+        cache_path = os.path.join(download_location, "cache.zip")
         with tqdm(total=total_size, unit="iB", unit_scale=True) as t:
             with open(cache_path, "wb") as f:
                 for data in response.iter_content(block_size):
@@ -327,7 +328,7 @@ def download_weights(model_code, params_data_dirs):
                     f.write(data)
 
         with zipfile.ZipFile(cache_path, "r") as zip_ref:
-            zip_ref.extractall(params_data_dirs)
+            zip_ref.extractall(download_location)
 
         os.remove(cache_path)
         return model_code
