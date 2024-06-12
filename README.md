@@ -40,25 +40,9 @@ If you are manually downloading weights, unzip them in the directory, such that 
 
 ## WSI Inference
 
-Entry point run_inference_wrapper
-
-This pipeline uses OpenSlide to read images, and therefore supports all formats which are supported by OpenSlide. 
-If you want to run this pipeline on custom ome.tif files, ensure that the necessary metadata such as resolution, downsampling and dimensions are available.
-Before running a slide, choose [appropriate parameters for your machine](#optimizing-inference-for-your-machine)
-
-To run a single slide:
-
-```bash
-python3 run_inference_wrapper.py \
-    --input "/path-to-wsi/wsi.svs" \
-    --output_root "results/" \
-    --cp "lizard_convnextv2_large" \
-    --tta 4 \
-    --inf_workers 16 \
-    --pp_tiling 10 \
-    --pp_workers 16
-```
-
+'''python
+run_inference_wrapper( input="/abs/path/to/input", output_root="/abs/path/to/results_dir/", cp="lizard_convnextv2_tiny", tta=4, inf_workers=16, pp_tiling=10, pp_workers=16)
+'''
 To run multiple slides, specify a glob pattern such as `"/path-to-folder/*.mrxs"` or provide a list of paths as a `.txt` file.
 
 ### Slurm

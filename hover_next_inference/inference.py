@@ -274,7 +274,7 @@ def get_inference_setup(params):
     models = []
     for pth in params["data_dirs"]:
         if not os.path.exists(pth):
-            pth = download_weights(os.path.split(pth)[-1])               
+            pth = download_weights(os.path.split(pth)[-1], params["data_dirs"])               
 
         checkpoint_path = f"{pth}/train/best_model"
         mod_params = toml.load(f"{pth}/params.toml")
@@ -304,24 +304,29 @@ def get_inference_setup(params):
 
     return params, models, augmenter, color_aug_fn
 
-def download_weights(model_code):
+def download_weights(model_code, params_data_dirs):
     if model_code in VALID_WEIGHTS:
         url = f"https://zenodo.org/records/10635618/files/{model_code}.zip"
-        print("downloading",model_code,"weights to",os.getcwd())
+        print("downloading", model_code, "weights to", params_data_dirs)
         try:
             response = requests.get(url, stream=True, timeout=15.0)
         except requests.exceptions.Timeout:
             print("Timeout")
+            return None
+
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 Kibibyte
+        cache_path = os.path.join(params_data_dirs, "cache.zip")
         with tqdm(total=total_size, unit="iB", unit_scale=True) as t:
-            with open("cache.zip", "wb") as f:
+            with open(cache_path, "wb") as f:
                 for data in response.iter_content(block_size):
                     t.update(len(data))
                     f.write(data)
-        with zipfile.ZipFile("cache.zip", "r") as zip:
-            zip.extractall("")
-        os.remove("cache.zip")
+
+        with zipfile.ZipFile(cache_path, "r") as zip_ref:
+            zip_ref.extractall(params_data_dirs)
+
+        os.remove(cache_path)
         return model_code
     else:
-        raise ValueError("Model id not found in valid identifiers, please make select one of", VALID_WEIGHTS)
+        raise ValueError("Model id not found in valid identifiers, please select one of", VALID_WEIGHTS)
