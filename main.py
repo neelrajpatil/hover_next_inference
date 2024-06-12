@@ -5,9 +5,9 @@ from timeit import default_timer as timer
 from datetime import timedelta
 import torch
 from glob import glob
-from src.inference import inference_main, get_inference_setup
-from src.post_process import post_process_main
-from src.data_utils import copy_img
+from hover_next_inference.inference import inference_main, get_inference_setup
+from hover_next_inference.post_process import post_process_main
+from hover_next_inference.data_utils import copy_img
 
 torch.backends.cudnn.benchmark = True
 print(torch.cuda.device_count(), " cuda devices")
