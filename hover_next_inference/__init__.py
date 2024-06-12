@@ -1,4 +1,4 @@
- """
+"""
 hover_next_inference submodule
 """
 
