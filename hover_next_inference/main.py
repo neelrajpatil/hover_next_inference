@@ -10,7 +10,7 @@ from hover_next_inference.post_process import post_process_main
 from hover_next_inference.data_utils import copy_img
 
 torch.backends.cudnn.benchmark = True
-print(torch.cuda.device_count(), " cuda devices")
+# print(torch.cuda.device_count(), " cuda devices")
 
 
 def prepare_input(params):
