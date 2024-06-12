@@ -55,7 +55,88 @@ def get_input_type(params):
     return params
 
 
-def run_inference_wrapper(params: dict):
+def run_inference_wrapper(
+    input=None,
+    output_root=None,
+    cp=None,
+    only_inference=False,
+    metric="f1",
+    batch_size=64,
+    tta=4,
+    save_polygon=False,
+    tile_size=256,
+    overlap=0.96875,
+    inf_workers=4,
+    inf_writers=2,
+    pp_tiling=8,
+    pp_overlap=256,
+    pp_workers=16,
+    keep_raw=False,
+    cache=None
+):
+    """
+    Start nuclei segmentation and classification pipeline using specified parameters.
+
+    Parameters
+    ----------
+    input: str
+        Path to WSI, glob pattern or text file containing paths
+    output_root: str
+        Output directory
+    cp: str
+        Comma separated list of checkpoint folders to consider
+    only_inference: bool
+        Split inference to GPU and CPU node/ only run inference
+    metric: str
+        Metric to optimize for post-processing ('mpq', 'f1', 'pannuke')
+    batch_size: int
+        Batch size
+    tta: int
+        Test time augmentations, number of views
+    save_polygon: bool
+        Save output as polygons to load in QuPath
+    tile_size: int
+        Tile size, models are trained on 256x256
+    overlap: float
+        Overlap between tiles
+    inf_workers: int
+        Number of workers for inference dataloader
+    inf_writers: int
+        Number of writers for inference dataloader
+    pp_tiling: int
+        Tiling factor for post-processing, number of tiles per dimension
+    pp_overlap: int
+        Overlap for post-processing tiles
+    pp_workers: int
+        Number of workers for post-processing
+    keep_raw: bool
+        Keep raw predictions (can be large files)
+    cache: str
+        Cache path
+    """
+
+    params = {
+        "input": input,
+        "output_root": output_root,
+        "cp": cp,
+        "only_inference": only_inference,
+        "metric": metric,
+        "batch_size": batch_size,
+        "tta": tta,
+        "save_polygon": save_polygon,
+        "tile_size": tile_size,
+        "overlap": overlap,
+        "inf_workers": inf_workers,
+        "inf_writers": inf_writers,
+        "pp_tiling": pp_tiling,
+        "pp_overlap": pp_overlap,
+        "pp_workers": pp_workers,
+        "keep_raw": keep_raw,
+        "cache": cache
+    }
+    main(params)    
+
+def main(params: dict):
     """
     Start nuclei segmentation and classification pipeline using specified parameters from argparse
 
@@ -229,4 +310,4 @@ if __name__ == "__main__":
     )
     parser.add_argument("--cache", type=str, default=None, help="cache path")
     params = vars(parser.parse_args())
-    run_inference_wrapper(params)
+    main(params)
