@@ -274,7 +274,7 @@ def get_inference_setup(params):
     models = []
     for pth in params["data_dirs"]:
         if not os.path.exists(pth):
-            pth = download_weights(os.path.split(pth)[-1], params["data_dirs"])               
+            pth = download_weights(os.path.split(pth)[-1], params["data_dirs"][0])               
 
         checkpoint_path = f"{pth}/train/best_model"
         mod_params = toml.load(f"{pth}/params.toml")
