@@ -307,16 +307,17 @@ def get_inference_setup(params):
 def download_weights(model_code, download_location):
     if model_code in VALID_WEIGHTS:
         url = f"https://zenodo.org/records/10635618/files/{model_code}.zip"
-        print("downloading", model_code, "weights to", download_location)
         try:
             response = requests.get(url, stream=True, timeout=15.0)
         except requests.exceptions.Timeout:
             print("Timeout")
             return None
-        download_location = os.path.join(download_location, "/")
-        download_location = os.path.join(download_location, model_code)
-        os.makedirs(download_location, exist_ok=True)
-        download_location = os.path.join(download_location, "/")
+        
+        # Remove 'results' from the path if it exists
+        if 'results' in download_location:
+            download_location = download_location.replace('results', '')
+            download_location = os.path.normpath(download_location)
+        print("Final model weights download location:", download_location)
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 Kibibyte
