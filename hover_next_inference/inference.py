@@ -279,11 +279,11 @@ def get_inference_setup(params):
     if 'results' in pth:
         pth = pth.replace('results', '')
         pth = os.path.normpath(pth) + '/'
-    print("loading model from:", pth+model_code)
+    pth = pth+model_code 
+    print("loading model from:", pth)
     
     if not os.path.exists(pth):
-        pth = download_weights(model_code, os.path.dirname(params["output_root"]))               
-
+        download_weights(model_code, os.path.dirname(pth))               
     checkpoint_path = f"{pth}/train/best_model"
     mod_params = toml.load(f"{pth}/params.toml")
     params["out_channels_cls"] = mod_params["out_channels_cls"]
@@ -332,8 +332,10 @@ def download_weights(model_code, download_location):
 
         with zipfile.ZipFile(cache_path, "r") as zip_ref:
             zip_ref.extractall(download_location)
+            
 
         os.remove(cache_path)
-        return model_code
+        
+        return
     else:
         raise ValueError("Model id not found in valid identifiers, please select one of", VALID_WEIGHTS)
