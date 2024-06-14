@@ -278,7 +278,7 @@ def get_inference_setup(params):
     pth = params["output_root"]
     if 'results' in pth:
         pth = pth.replace('results', '')
-        pth = os.path.normpath(pth)
+        pth = os.path.normpath(pth) + '/'
     print("loading model from:", pth+model_code)
     
     if not os.path.exists(pth):
