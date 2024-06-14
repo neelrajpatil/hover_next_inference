@@ -158,7 +158,6 @@ def main(params: dict):
     ]
 
     print("saving results to:", params["output_root"])
-    print("loading model from:", params["data_dirs"])
 
     # Run per tile inference and store results
     params, models, augmenter, color_aug_fn = get_inference_setup(params)

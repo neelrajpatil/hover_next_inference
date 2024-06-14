@@ -272,22 +272,30 @@ def get_inference_setup(params):
     get model/ models and load checkpoint, create augmentation functions and set up parameters for inference
     """
     models = []
-    for pth in params["data_dirs"]:
-        if not os.path.exists(pth):
-            pth = download_weights(os.path.split(pth)[-1], os.path.dirname(params["output_root"]))               
+    model_code = os.path.split(params["data_dirs"][0])[-1]
+    
+    # Model is in the output/results parent directory 
+    pth = params["output_root"]
+    if 'results' in pth:
+        pth = pth.replace('results', '')
+        pth = os.path.normpath(pth)
+    print("loading model from:", pth+model_code)
+    
+    if not os.path.exists(pth):
+        pth = download_weights(model_code, os.path.dirname(params["output_root"]))               
 
-        checkpoint_path = f"{pth}/train/best_model"
-        mod_params = toml.load(f"{pth}/params.toml")
-        params["out_channels_cls"] = mod_params["out_channels_cls"]
-        params["inst_channels"] = mod_params["inst_channels"]
-        model = get_model(
-            enc=mod_params["encoder"],
-            out_channels_cls=params["out_channels_cls"],
-            out_channels_inst=params["inst_channels"],
-        ).to(device)
-        model = load_checkpoint(model, checkpoint_path, device)
-        model.eval()
-        models.append(copy.deepcopy(model))
+    checkpoint_path = f"{pth}/train/best_model"
+    mod_params = toml.load(f"{pth}/params.toml")
+    params["out_channels_cls"] = mod_params["out_channels_cls"]
+    params["inst_channels"] = mod_params["inst_channels"]
+    model = get_model(
+        enc=mod_params["encoder"],
+        out_channels_cls=params["out_channels_cls"],
+        out_channels_inst=params["inst_channels"],
+    ).to(device)
+    model = load_checkpoint(model, checkpoint_path, device)
+    model.eval()
+    models.append(copy.deepcopy(model))
     # create augmentation functions on device
     augmenter = SpatialAugmenter(TTA_AUG_PARAMS).to(device)
     color_aug_fn = color_augmentations(False, rank=device)
@@ -312,12 +320,6 @@ def download_weights(model_code, download_location):
         except requests.exceptions.Timeout:
             print("Timeout")
             return None
-        
-        # Remove 'results' from the path if it exists
-        if 'results' in download_location:
-            download_location = download_location.replace('results', '')
-            download_location = os.path.normpath(download_location)
-        print("Final model weights download location:", download_location)
 
         total_size = int(response.headers.get("content-length", 0))
         block_size = 1024  # 1 Kibibyte
