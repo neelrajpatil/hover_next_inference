@@ -134,6 +134,10 @@ def run_inference_wrapper(
         "keep_raw": keep_raw,
         "cache": cache
     }
+    params["root"] = os.path.dirname(os.path.dirname(output_root)) 
+    params["data_dirs"] = [
+        os.path.join(params["root"], c) for c in params["cp"].split(",")
+    ]
     main(params)    
 
 def main(params: dict):
@@ -151,11 +155,6 @@ def main(params: dict):
         print("invalid metric, falling back to f1")
     else:
         print("optimizing postprocessing for: ", params["metric"])
-
-    params["root"] = os.path.dirname(__file__)
-    params["data_dirs"] = [
-        os.path.join(params["root"], c) for c in params["cp"].split(",")
-    ]
 
     print("saving results to:", params["output_root"])
 
@@ -309,4 +308,8 @@ if __name__ == "__main__":
     )
     parser.add_argument("--cache", type=str, default=None, help="cache path")
     params = vars(parser.parse_args())
+    params["root"] = os.path.dirname(__file__)
+    params["data_dirs"] = [
+        os.path.join(params["root"], c) for c in params["cp"].split(",")
+    ]
     main(params)
