@@ -274,7 +274,7 @@ def get_inference_setup(params):
     models = []
     model_code = os.path.split(params["data_dirs"][0])[-1]
     
-    if "model_path" in params.key():
+    if "model_path" in params.keys():
         pth = params["data_dirs"][0]
     else:
         # Model is in the output/results parent directory 
