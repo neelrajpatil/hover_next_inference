@@ -274,12 +274,15 @@ def get_inference_setup(params):
     models = []
     model_code = os.path.split(params["data_dirs"][0])[-1]
     
-    # Model is in the output/results parent directory 
-    pth = params["output_root"]
-    if 'results' in pth:
-        pth = pth.replace('results', '')
-        pth = os.path.normpath(pth) + '/'
-    pth = pth+model_code 
+    if "model_path" in params.key():
+        pth = params["data_dirs"][0]
+    else:
+        # Model is in the output/results parent directory 
+        pth = params["output_root"]
+        if 'results' in pth:
+            pth = pth.replace('results', '')
+            pth = os.path.normpath(pth) + '/'
+        pth = pth+model_code 
     print("loading model from:", pth)
     
     if not os.path.exists(pth):
