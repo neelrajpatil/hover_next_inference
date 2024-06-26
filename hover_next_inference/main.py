@@ -56,6 +56,7 @@ def get_input_type(params):
 
 
 def run_inference_wrapper(
+    model_path,
     input=None,
     output_root=None,
     cp=None,
@@ -72,7 +73,7 @@ def run_inference_wrapper(
     pp_overlap=256,
     pp_workers=16,
     keep_raw=False,
-    cache=None
+    cache=None,
 ):
     """
     Start nuclei segmentation and classification pipeline using specified parameters.
@@ -132,12 +133,14 @@ def run_inference_wrapper(
         "pp_overlap": pp_overlap,
         "pp_workers": pp_workers,
         "keep_raw": keep_raw,
-        "cache": cache
+        "cache": cache,
+        "model_path" : model_path
     }
     params["root"] = os.path.dirname(os.path.dirname(output_root)) 
-    params["data_dirs"] = [
-        os.path.join(params["root"], c) for c in params["cp"].split(",")
-    ]
+    params["data_dirs"] = [params["model_path"]]
+    # params["data_dirs"] = [
+    #     os.path.join(params["root"], c) for c in params["cp"].split(",")
+    # ]
     main(params)    
 
 def main(params: dict):
